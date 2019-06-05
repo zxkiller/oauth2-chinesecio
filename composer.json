@@ -1,0 +1,20 @@
+{
+    "name": "zxkiller/oauth2-chinesecio",
+    "description": "Oauth2 Client for ChineseCIO",
+    "type": "library",
+    "require": {
+        "league/oauth2-client": "^2.2"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Zhang Xiao",
+            "email": "zhangxiaomail@163.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+          "zhangxiao\\OAuth2\\Client\\": "src/"
+        }
+    }
+}
