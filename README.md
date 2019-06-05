@@ -13,63 +13,52 @@ composer require zxkiller/oauth2-chinesecio
 ### Authorization Code Flow
 
 ```php
-$provider = new \Oakhope\OAuth2\Client\Provider\WebProvider([
-        'appid' => '{wechat-client-id}',
-        'secret' => '{wechat-client-secret}',
-        'redirect_uri' => 'https://example.com/callback-url'
+$provider = new \zhangxiao\OAuth2\Client\Provider\WebProvider([
+        'clientId' => '{wechat-client-id}',
+        'clientSecret' => '{wechat-client-secret}',
+        'redirect_uri' => 'https://example.com/callback-url',
+        'verify' => false,
     ]);
 
-// If we don't have an authorization code then get one
 if (!isset($_GET['code'])) {
-
-    // Fetch the authorization URL from the provider; this returns the
-    // urlAuthorize option and generates and applies any necessary parameters
-    // (e.g. state).
-    $authorizationUrl = $provider->getAuthorizationUrl();
-
-    // Get the state generated for you and store it to the session.
+    $options = [
+        'scope' => ['basic', 'email']
+        //'scope' => ['basic']
+    ];
+    // If we don't have an authorization code then get one
+    $authUrl = $provider->getAuthorizationUrl($options);
     $_SESSION['oauth2state'] = $provider->getState();
-
-    // Redirect the user to the authorization URL.
-    header('Location: '.$authorizationUrl);
+    header('Location: '.$authUrl);
     exit;
 
 // Check given state against previously stored one to mitigate CSRF attack
-} elseif (empty($_GET['state']) || ($_GET['state'] !== rtrim($_SESSION['oauth2state'], '#wechat_redirect'))) {
+} elseif (empty($_GET['state']) || ($_GET['state'] !== $_SESSION['oauth2state'])) {
 
     unset($_SESSION['oauth2state']);
     exit('Invalid state');
 
 } else {
 
+    // Optional: Now you have a token you can look up a users profile data
     try {
+        // Try to get an access token (using the authorization code grant)
+        $token = $provider->getAccessToken('authorization_code', [
+            'code' => $_GET['code']
+        ]);
+        // We got an access token, let's now get the user's details
+        $user = $provider->getResourceOwner($token);
 
-        // Try to get an access token using the authorization code grant.
-        $accessToken = $provider->getAccessToken(
-            'authorization_code',
-            [
-                'code' => $_GET['code'],
-            ]);
+        // Use these details to create a new profile
+        printf('Hello %s!', $user->getUsername());
 
-        // We have an access token, which we may use in authenticated
-        // requests against the service provider's API.
-        echo "token: ".$accessToken->getToken()."<br/>";
-        echo "refreshToken: ".$accessToken->getRefreshToken()."<br/>";
-        echo "Expires: ".$accessToken->getExpires()."<br/>";
-        echo ($accessToken->hasExpired() ? 'expired' : 'not expired')."<br/><br/>";
+    } catch (Exception $e) {
 
-        // Using the access token, we may look up details about the
-        // resource owner.
-        $resourceOwner = $provider->getResourceOwner($accessToken);
-
-        var_export($resourceOwner->toArray());
-        
-    } catch (\League\OAuth2\Client\Provider\Exception\IdentityProviderException $e) {
-
-        // Failed to get the access token or user details.
-        echo "error:";
+        // Failed to get user details
         exit($e->getMessage());
     }
+
+    // Use this to interact with an API on the users behalf
+    //echo $token->getToken();
 }
 ```
 
@@ -81,10 +70,11 @@ Once your application is authorized, you can refresh an expired token using a re
 _This example uses [Brent Shaffer's](https://github.com/bshaffer) demo OAuth 2.0 application named **Lock'd In**. See authorization code example above, for more details._
 
 ```php
-$provider = new \Oakhope\OAuth2\Client\Provider\WebProvider([
-        'appid' => '{wechat-client-id}',
-        'secret' => '{wechat-client-secret}',
-        'redirect_uri' => 'https://example.com/callback-url'
+$provider = new \zhangxiao\OAuth2\Client\Provider\WebProvider([
+        'clientId' => '{wechat-client-id}',
+        'clientSecret' => '{wechat-client-secret}',
+        'redirect_uri' => 'https://example.com/callback-url',
+        'verify' => false,
     ]);
 
 $existingAccessToken = getAccessTokenFromYourDataStore();
