@@ -25,21 +25,21 @@ class WebProvider extends AbstractProvider
      *
      * @var string
      */
-    protected $urlAuthorize = 'https://passport.chinesecio.com/oauth2/Authcode/authorize';
+    protected $urlAuthorize = 'https://passport.chineseplus.net/oauth2/Authcode/authorize';
 
     /**
      * Base url for access token.
      *
      * @var string
      */
-    protected $urlAccessToken = 'https://passport.chinesecio.com/oauth2/Authcode/accesstoken';
+    protected $urlAccessToken = 'https://passport.chineseplus.net/oauth2/Authcode/accesstoken';
 
     /**
      * Base url for resource owner.
      *
      * @var string
      */
-    protected $urlResourceOwnerDetails = 'https://passport.chinesecio.com/resource/Api/getuserinfo';
+    protected $urlResourceOwnerDetails = 'https://passport.chineseplus.net/resource/Api/getuserinfo';
 
     /**
      * Get authorization url to begin OAuth flow
