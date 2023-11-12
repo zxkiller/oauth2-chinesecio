@@ -67,7 +67,7 @@ class WebResourceOwner implements ResourceOwnerInterface
      *
      * @return int|null
      */
-    public function getStatus()
+    public function getLastLoginTime()
     {
         return isset($this->response['last_login']) ? (int) $this->response['last_login'] : null;
     }
