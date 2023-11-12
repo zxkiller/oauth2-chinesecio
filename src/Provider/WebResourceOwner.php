@@ -53,13 +53,23 @@ class WebResourceOwner implements ResourceOwnerInterface
     }
 
     /**
-     * Get user lastname
+     * Get user status
      *
      * @return string|null
      */
     public function getStatus()
     {
         return isset($this->response['status']) ? $this->response['status'] : null;
+    }
+
+    /**
+     * Get user last login time of passport website
+     *
+     * @return int|null
+     */
+    public function getStatus()
+    {
+        return isset($this->response['last_login']) ? (int) $this->response['last_login'] : null;
     }
 
 
