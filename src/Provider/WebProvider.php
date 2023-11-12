@@ -3,10 +3,9 @@ namespace zhangxiao\OAuth2\Client\Provider;
 
 use GuzzleHttp\Psr7\Uri;
 use League\OAuth2\Client\Provider\AbstractProvider;
-use League\OAuth2\Client\Provider\Exception\IdentityProviderException;
 use League\OAuth2\Client\Token\AccessToken;
-//use League\OAuth2\Client\Tool\BearerAuthorizationTrait;
 use Psr\Http\Message\ResponseInterface;
+use zhangxiao\OAuth2\Client\Provider\Exception\IdentityProviderException;
 
 class WebProvider extends AbstractProvider
 {
